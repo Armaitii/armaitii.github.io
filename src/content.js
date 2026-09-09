@@ -1,8 +1,3 @@
-/**
- * content.js — ✏️ EDIT THIS FILE with your real info.
- * Every placeholder on the site ("Your Name", "yourusername", …) comes from
- * here. All fields marked ⚠️ should be replaced before you push to GitHub.
- */
 
 export const PROFILE = {
   name: 'Armita Hoda',
@@ -15,11 +10,11 @@ export const PROFILE = {
     "This site's background is exactly that: a ball performing gradient descent on a loss landscape, and your cursor reshapes the terrain in real time. Everything you see is computed live, including the normals.",
   ],
 
-  location: 'Tehrann, IR',
+  location: 'Tehran, IR',
   email: 'armita.hoda@gmail.com',
   github: 'https://github.com/armaitii',
 
-  interests: ['chromatin regulation', 'neuroepigenetics', 'RNA biology', 'mechanistic biology'],
+  interests: ['chromatin regulation', 'neurodevelopmental disorders', 'epigenetics', 'RNA biology', 'therapeutics'],
 
   // resume: set to 'resume.pdf' once you drop a PDF into public/
   resume: 'Armita_Hoda_CV.pdf',
@@ -28,39 +23,114 @@ export const PROFILE = {
 
 export const PROJECTS = [
   {
+    title: 'Mechanistic cell-free DNA fragmentation simulation',
+
+    desc:
+      'Thesis: Epigenome-aware modeling of cfDNA fragmentation using stochastic simulation, nucleosome organization, nuclease-specific cleavage preferences, and fragmentomics analysis.',
+
+    tags: [
+      'cfDNA',
+      'ATAC-seq',
+      'MNase-seq',
+      'Stochastic simulation',
+      'Optuna',
+      'ABC-SMC'
+    ],
+
+    lang: 'Python',
+    langColor: '#e15cff',
+    link: '',
+
+    featured: true,
+  },
+  {
+    title: 'neuropsychiatric regulation analysis',
+
+    desc:
+      'Analysis of genetic associations between neuropsychiatric traits and cell-type-specific chromatin accessibility using GWAS summary statistics and stratified LD score regression.',
+
+    tags: [
+      'GWAS',
+      'S-LDSC',
+      'snATAC-seq',
+      'Snakemake'
+    ],
+
+    lang: 'Python',
+    langColor: '#e15cff',
+    link: '',
+    featured: true,
+  },  
+  {
+    title: 'Settle-Up',
+    desc:
+      'A lightweight expense-settlement tool that simplifies shared expenses by calculating the minimum set of payments needed to settle balances.',
+
+    tags: [
+      'TypeScript',
+      'algorithms',
+      'React',
+      'PostgreSQL'
+    ],
+    lang: 'TypeScript',
+    langColor: '#37eeff',
+    link: '',
+    featured: false,
+  },  
+  {
     title: 'grad-descent-playground',
     desc: 'Interactive WebGL loss-landscape toy — the exact visual that runs behind this page. A ball does gradient descent while your cursor deforms the surface.',
     tags: ['three.js', 'WebGL'],
     lang: 'JavaScript',
     langColor: '#f1e05a',
-    stars: 128,
     link: 'https://github.com/armaitii/grad-descent-playground',
-    featured: true,
-  },
-  {
-    title: 'shader-doodle',
-    desc: 'Daily GLSL sketches — raymarched shapes, fbm terrain and flow fields — with a tiny live editor so each one runs in the browser.',
-    tags: ['glsl', 'shadertoy', 'gpu'],
-    lang: 'GLSL',
-    langColor: '#5686a5',
-    stars: 54,
-    link: '',
-  },
-  {
-    title: 'cfdna-notes',
-    desc: 'My public study notes on optimization, generalization and architectures — written to be understood by future me (and you).',
-    tags: ['writing', 'research'],
-    lang: 'Markdown',
-    langColor: '#083fa1',
-    stars: 41,
-    link: '',
+    featured: false,
   },
 ];
 
-/** SKILLS — grouped chips; ⚠️ edit freely. */
+
 export const SKILLS = [
-  { group: 'Genetic engineering', items: ['Pymol', 'Allelid', 'Snapgene'] },
-  { group: 'Engineering', items: ['Python', 'R', 'Stochastic simulation', 'MD simulation', 'Snakemake'] },
-  { group: 'Biology', items: ['Genetic', 'Neuroscience'] },
-  { group: 'Also into', items: [''] },
+  {
+    group: 'Computational biology',
+    items: [
+      'Advanced Programming',
+      'Bioinformatics',
+      'Systems Biology',
+      'Biostatistics',
+      'Machine Learning'
+    ]
+  },
+
+  {
+    group: 'Genomics & molecular biology',
+    items: [
+      'Genetic Engineering',
+      'Omics',
+      'Nucleic Acid Technology',
+      'Synthetic Biology',
+      'Protein Engineering'
+    ]
+  },
+
+  {
+    group: 'Cellular & biomedical sciences',
+    items: [
+      'Cell & Tissue Culture',
+      'Stem Cells',
+      'Cellular & Molecular Immunology',
+      'Personalized Medicine'
+    ]
+  },
+
+  {
+    group: 'Experimental methods',
+    items: [
+      'Synchrotron Micro-CT',
+      'Infrared Microspectroscopy',
+      'X-ray Absorption Spectroscopy',
+      'X-ray Fluorescence'
+    ]
+  },
+
 ];
+
