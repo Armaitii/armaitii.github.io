@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    // set the theme before first paint.
+    // DEFAULT IS LIGHT. A dark preference is only honoured if the visitor
+    // explicitly toggled it on THIS version of the site (key v2), so stale
+    // preferences from earlier builds can never make the site open dark.
+    (function () {
+      try {
+        var t = localStorage.getItem('portfolio-theme-v2');
+        if (t !== 'light' && t !== 'dark') t = 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#f2f5fc" />
+  <meta name="description" content="Personal site of a machine learning engineer & creative developer, with an interactive gradient-descent loss-landscape background." />
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <title>Your Name — ML Engineer & Creative Developer</title>
+</head>
+<body>
+
+  <!-- ============ 3D background (fixed behind everything) ============ -->
+  <div id="bg" aria-hidden="true">
+    <canvas id="scene"></canvas>
+    <div class="scrim"></div>
+  </div>
+
+  <!-- ============ "End of the page" stage — kinesin rescue ============ -->
+  <div id="stage" aria-hidden="true">
+    <div class="rail"></div>
+    <div class="fball" id="fball"></div>
+    <canvas id="kinCanvas"></canvas>
+  </div>
+
+  <!-- ============ HUD overlays ============ -->
+  <div id="hud">
+    <div id="stats" aria-hidden="true">loss —&nbsp;·&nbsp;∇ —&nbsp;·&nbsp;exploring</div>
+    <div id="hint">move your cursor — the landscape reshapes under it</div>
+  </div>
+
+  <!-- ============ Page content ============ -->
+  <div class="page" id="top">
+    <a class="skip" href="#content">Skip to content</a>
+
+    <header class="nav glass">
+      <a class="brand" href="#top"><span id="nav-name">Your</span><span class="dot">.</span></a>
+      <nav>
+        <a href="#about">about</a>
+        <a href="#projects">projects</a>
+        <a href="#skills">skills</a>
+        <a href="#contact">contact</a>
+      </nav>
+      <a id="nav-gh" class="icon-link" href="https://github.com/yourusername" target="_blank" rel="noopener" aria-label="GitHub profile">
+        <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode">
+        <svg class="ico-sun" viewBox="0 0 16 16" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M8 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM8 0a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V.75A.75.75 0 0 1 8 0zM8 13a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 13zM2.343 2.343a.75.75 0 0 1 1.061 0l1.06 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.06zM11.536 11.536a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.061zM0 8a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H.75A.75.75 0 0 1 0 8zM13 8a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 13 8zM4.404 11.536a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.061zM9.475 2.344a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061L9.475 3.404a.75.75 0 0 1 0-1.06z"/></svg>
+        <svg class="ico-moon" viewBox="0 0 16 16" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278z"/></svg>
+      </button>
+    </header>
+
+    <main id="content">
+      <!-- ---------- HERO ---------- -->
+      <section class="hero" aria-label="intro">
+        <div class="hero-chip glass">the ball rolls through the loss landscape &nbsp;·&nbsp; <b>you reshape it live</b></div>
+        <h1>
+          <span class="line name" id="hero-name">Your Name</span>
+          <span class="line grad" id="hero-role">Machine Learning Engineer<br />&amp; Creative Developer</span>
+        </h1>
+        <p class="lede" id="hero-lede"></p>
+        <div class="cta">
+          <a class="btn primary" href="#projects">see the work</a>
+          <a class="btn ghost" href="#contact">say hello</a>
+          <div class="socials" id="hero-socials"></div>
+        </div>
+        <div class="scrollcue" aria-hidden="true"></div>
+      </section>
+
+      <!-- ---------- ABOUT ---------- -->
+      <section class="section" id="about">
+        <p class="kicker"><span>01</span> · about</p>
+        <div class="grid-about">
+          <div class="card avatar-card">
+            <div class="avatar" id="avatar">YN</div>
+            <ul class="facts" id="facts"></ul>
+          </div>
+          <div class="prose">
+            <h2 id="about-h">Hi, I'm <span id="about-name">Your Name</span>.</h2>
+            <p id="about-p1"></p>
+            <p id="about-p2"></p>
+            <div class="chips" id="interests"></div>
+            <div class="mini-btns">
+              <a class="btn ghost sm" id="btn-resume" href="#" hidden>download résumé</a>
+              <a class="btn ghost sm" id="btn-github" href="https://github.com/yourusername" target="_blank" rel="noopener">github profile ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- PROJECTS ---------- -->
+      <section class="section" id="projects">
+        <p class="kicker"><span>02</span> · selected projects</p>
+        <h2 class="sec-h">Things I've built</h2>
+        <div class="grid-projects" id="project-grid"></div>
+      </section>
+
+      <!-- ---------- SKILLS ---------- -->
+      <section class="section" id="skills">
+        <p class="kicker"><span>03</span> · toolbox</p>
+        <h2 class="sec-h">Skills &amp; tools</h2>
+        <div id="skill-groups"></div>
+      </section>
+
+      <!-- ---------- CONTACT ---------- -->
+      <section class="section" id="contact">
+        <p class="kicker"><span>04</span> · contact</p>
+        <h2 class="sec-h">Let's make something <span class="grad">optimally cool</span></h2>
+        <p class="lede narrow">Have an idea, a role, or a wild visual experiment in mind? My inbox is open — and unlike this surface, it never stays in one place for long.</p>
+        <div class="cta big">
+          <a class="btn primary" id="mail-btn" href="/cdn-cgi/l/email-protection#99f1fcf5f5f6d9fce1f8f4e9f5fcb7faf6f4"><span class="__cf_email__" data-cfemail="68000d040407280d10090518040d460b0705">[email&#160;protected]</span></a>
+          <a class="btn ghost" id="contact-gh" href="https://github.com/yourusername" target="_blank" rel="noopener">github ↗</a>
+        </div>
+        <div class="socials center" id="contact-socials"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p id="foot">© <span id="year"></span> · built with <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> + a little gradient descent · <a id="foot-source" href="https://github.com/yourusername/yourusername.github.io" target="_blank" rel="noopener">source</a></p>
+    </footer>
+  </div>
+
+  <noscript><p style="text-align:center;padding:2rem;color:#4a5673">This site needs JavaScript for its 3D background. Please enable it.</p></noscript>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module" src="./src/main.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a38611da5c713434',t:'MTc4ODk1NTYxNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
