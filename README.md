@@ -1,6 +1,6 @@
 # Armita Hoda — Personal Portfolio
 
-Personal research and technical portfolio of **Armita Hoda**, a biotechnology researcher interested in **chromatin regulation, epigenetics, neurobiology, and mechanistic biology**.
+Personal research and technical portfolio of **Armita Hoda**, a biotechnology researcher interested in **chromatin regulation, epigenetics, neurobiology, and neurodevelopmental disorders**.
 
 🌐 **Website:** [armaitii.github.io](https://armaitii.github.io)
 
@@ -10,13 +10,12 @@ The portfolio brings together my research projects, computational work, scientif
 
 ## About
 
-My research interests lie at the intersection of **biotechnology, genomics, epigenetics, and neurobiology**.
+My research interests lie at the intersection of **biotechnology, genomics, epigenetics, and therapeutics**.
 
 I am particularly interested in understanding how molecular and epigenetic mechanisms regulate cellular identity and development, with a growing focus on:
 
 - Chromatin regulation
 - Neuroepigenetics
-- Neurodevelopment
 - Neurodevelopmental and psychiatric disorders
 - RNA biology
 - Epigenome editing
@@ -250,18 +249,6 @@ Changes pushed to the `main` branch are built and published automatically throug
 Because this repository follows the `username.github.io` naming convention, the deployed site is available at:
 
 **https://armaitii.github.io**
-
----
-
-## Design Philosophy
-
-The portfolio intentionally combines two things that are usually presented separately:
-
-**scientific work** and **technical experimentation**.
-
-The research content is the primary purpose of the site. The interactive visualization provides a more personal way of presenting the computational side of my work and reflects my interest in exploring ideas through simulation and visualization.
-
-The result is meant to be a research portfolio rather than a conventional software-development portfolio: a place to document scientific questions, projects, methods, and the direction I want to take my research.
 
 ---
 
