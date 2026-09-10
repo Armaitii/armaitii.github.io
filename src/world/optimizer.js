@@ -4,7 +4,7 @@ import {
 } from './lossField';
 
 /**
- * optimizer.js - the ball: continuous gradient descent with momentum,
+ * optimizer.js — the ball: continuous gradient descent with momentum,
  * friction and a little thermal noise. It NEVER stops, never "finds" a
  * minimum in the UI sense, and never teleports or resets:
  *
@@ -24,7 +24,7 @@ const CONFIG = {
   accel: 7.2,        // responsive "light ball": quick to accelerate...
   friction: 0.034,   // ...but also coasts to a stop softly
   up: 0.9,           // light ball rolls uphill more easily
-  noise: 0.05,      // tiny thermal jitter (keeps it from being pixel-still)
+  noise: 0.015,      // tiny thermal jitter (keeps it from being pixel-still)
   lullSpeed: 0.3,    // EMA speed below this counts as "lulling"
   lullTime: 2.2,     // seconds of lull before a gentle boost
   flatKick: 2.2,     // boost strength on completely flat ground
@@ -62,7 +62,7 @@ export class Optimizer {
     this.annealT = 0;
     this.ax = 0; this.ay = 0; // anneal mound anchor
 
-    // one random starting spot (no respawns after this)
+    // One random starting spot. World handles returns after edge rescues.
     const S = FIELD.SIZE;
     let x = 0, y = 0, guard = 0;
     do {
@@ -83,7 +83,7 @@ export class Optimizer {
     let ax = 0, ay = 0;
     if (mag > 1e-8) { ax = -fx / mag; ay = -fy / mag; }
 
-    // moving against the slope costs extra - gives inertia & overshoot
+    // moving against the slope costs extra — gives inertia & overshoot
     const sp = Math.hypot(vel.x, vel.y);
     if (sp > 1e-8) {
       const align = (vel.x * ax + vel.y * ay) / sp;
@@ -93,7 +93,7 @@ export class Optimizer {
     vel.x += ax * CONFIG.accel * dt;
     vel.y += ay * CONFIG.accel * dt;
 
-    // smooth escape boost (if active) - applied as acceleration so the ball
+    // smooth escape boost (if active) — applied as acceleration so the ball
     // accelerates & coasts gently instead of jerking
     if (this.boost.x !== 0 || this.boost.y !== 0) {
       vel.x += this.boost.x * dt;
@@ -104,7 +104,7 @@ export class Optimizer {
       if (Math.hypot(this.boost.x, this.boost.y) < 0.02) this.boost.set(0, 0);
     }
 
-    // tiny thermal jitter - barely perceptible, keeps it from being still
+    // tiny thermal jitter — barely perceptible, keeps it from being still
     const jit = CONFIG.noise * Math.min(1, dt * 60);
     vel.x += (Math.random() * 2 - 1) * jit;
     vel.y += (Math.random() * 2 - 1) * jit;
@@ -118,10 +118,9 @@ export class Optimizer {
     pos.y += vel.y * dt;
     this.speed = Math.hypot(vel.x, vel.y);
 
-    // soft containment inside the field
-    const m = FIELD.SIZE - 0.45;
-    if (Math.abs(pos.x) > m) pos.x = Math.sign(pos.x) * m;
-    if (Math.abs(pos.y) > m) pos.y = Math.sign(pos.y) * m;
+    // No invisible boundary wall: momentum and cursor-made slopes can
+    // push the ball past the grid. World detects that crossing and applies
+    // gravity, rather than steering it out on a timer.
 
     // ---------------- exploration engine (never stops, never resets) -------
     this.t += dt;
@@ -131,7 +130,7 @@ export class Optimizer {
 
     if (this.annealOn) {
       // the mound is up: keep lifting until the ball has actually reached the
-      // mound's flank/rim (≈2.4 units out) or we've given it long enough -
+      // mound's flank/rim (≈2.4 units out) or we've given it long enough —
       // only then melt it back down
       this.annealT += dt;
       const dist = Math.hypot(pos.x - this.ax, pos.y - this.ay);
@@ -146,7 +145,7 @@ export class Optimizer {
       this.kicks++;
 
       if (this.kicks >= CONFIG.maxKicks) {
-        // several jolts weren't enough - lift the terrain under the basin so
+        // several jolts weren't enough — lift the terrain under the basin so
         // the ball spills out over the rim (simulated-annealing heat-up)
         this.ax = pos.x; this.ay = pos.y;
         setAnnealTarget(this.ax, this.ay, 1);
@@ -155,7 +154,7 @@ export class Optimizer {
         this.kicks = 0;
       } else {
         // smooth boost aimed uphill (landscape gradient) with some spread,
-        // scaled by how deep the local basin is - the boost accelerates the
+        // scaled by how deep the local basin is — the boost accelerates the
         // ball over ~0.5s, so the motion stays fluid
         sample(pos.x, pos.y, SCRATCH); // base landscape gradient only
         const gm = Math.hypot(SCRATCH[0], SCRATCH[1]);
@@ -163,8 +162,8 @@ export class Optimizer {
           ? Math.atan2(SCRATCH[1], SCRATCH[0]) + (Math.random() * 2 - 1) * 2.0
           : Math.random() * Math.PI * 2;
         const depth = Math.max(0, 0.5 - terrainH(pos.x, pos.y)); // basin depth
-        const kick = CONFIG.flatKick + Math.min(1.8, depth * 1);
-        // mostly a smooth accelerating boost, plus a small instant impulse -
+        const kick = CONFIG.flatKick + Math.min(2.2, depth * 1.3);
+        // mostly a smooth accelerating boost, plus a small instant impulse —
         // enough energy to crest mid-field ridges, but still fluid motion
         this.boost.x += Math.cos(ang) * kick * 0.55;
         this.boost.y += Math.sin(ang) * kick * 0.55;

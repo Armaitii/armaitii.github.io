@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    // set the theme before first paint.
+    // DEFAULT IS LIGHT. A dark preference is only honoured if the visitor
+    // explicitly toggled it on THIS version of the site (key v2), so stale
+    // preferences from earlier builds can never make the site open dark.
+    (function () {
+      try {
+        var t = localStorage.getItem('portfolio-theme-v2');
+        if (t !== 'light' && t !== 'dark') t = 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#f2f5fc" />
+  <meta name="description" content="View and download Armita Hoda’s CV and academic transcript." />
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <title>resume — Armita Hoda</title>
+</head>
+<body class="static resume-page" data-resume-reader="bundled-documents-2">
+  <div class="page" id="top">
+    <a class="skip" href="#content">Skip to resume</a>
+    <header class="nav glass">
+      <a class="brand" href="./index.html"><span id="nav-name">Armita Hoda</span><span class="dot">.</span></a>
+      <nav aria-label="Main navigation">
+        <a class="nav-resume" href="./resume.html" aria-current="page">resume</a>
+        <a href="./index.html#projects">projects</a>
+        <a href="./index.html#skills">skills</a>
+        <a href="./index.html#contact">contact</a>
+      </nav>
+      <a id="nav-gh" class="icon-link" href="https://github.com/armaitii" target="_blank" rel="noopener" aria-label="GitHub profile">
+        <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode">
+        <svg class="ico-sun" viewBox="0 0 16 16" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M8 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM8 0a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V.75A.75.75 0 0 1 8 0zM8 13a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 13zM2.343 2.343a.75.75 0 0 1 1.061 0l1.06 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.06zM11.536 11.536a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.061zM0 8a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H.75A.75.75 0 0 1 0 8zM13 8a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 13 8zM4.404 11.536a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.061zM9.475 2.344a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061L9.475 3.404a.75.75 0 0 1 0-1.06z"/></svg>
+        <svg class="ico-moon" viewBox="0 0 16 16" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278z"/></svg>
+      </button>
+    </header>
+    <main id="content" class="resume-main">
+      <a class="resume-back" href="./index.html">← Back to portfolio</a>
+      <header class="resume-heading">
+        <div>
+          <p class="kicker">Academic &amp; professional profile</p>
+          <h1>resume<span class="resume-dot">.</span></h1>
+        </div>
+        <div class="resume-actions">
+          <button class="btn primary" id="resume-download" type="button" aria-label="Download CV PDF" disabled aria-describedby="resume-status">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4"/></svg>
+            Download PDF
+          </button>
+        </div>
+      </header>
+
+      <section class="resume-document glass" aria-label="resume document">
+        <div class="resume-toolbar">
+          <span class="resume-document-label">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H5v18h14V8l-5-5Z"/><path d="M14 3v5h5M8 12h8M8 16h6"/></svg>
+            Curriculum vitae
+          </span>
+          <div class="resume-reader-controls" id="resume-reader-controls" hidden>
+            <button class="reader-control" type="button" id="resume-zoom-out" aria-label="Zoom out CV">−</button>
+            <output class="reader-zoom-level" id="resume-zoom-level" aria-live="polite">100%</output>
+            <button class="reader-control" type="button" id="resume-zoom-in" aria-label="Zoom in CV">+</button>
+            <button class="reader-fit" type="button" id="resume-fit">Fit width</button>
+          </div>
+          <span id="resume-status" role="status">Loading bundled CV…</span>
+        </div>
+        <div id="resume-preview" class="resume-preview" role="region" aria-label="CV pages" tabindex="0" hidden></div>
+        <div class="resume-empty" id="resume-empty">
+          <svg class="resume-empty-icon" viewBox="0 0 80 92" fill="none" aria-hidden="true"><rect x="11" y="4" width="58" height="80" rx="7" fill="var(--chip-bg)" stroke="currentColor" stroke-width="1.5"/><path d="M24 25h18M24 37h32M24 46h26M24 61h32M24 70h21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="62" cy="77" r="12" fill="var(--bg)" stroke="currentColor" stroke-width="1.5"/><path d="M58 77h8M62 73v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <h2 id="resume-empty-title">Loading resume</h2>
+          <p id="resume-empty-copy">Preparing the CV preview.</p>
+          <a class="btn ghost sm" href="./index.html#about">Explore the portfolio ↗</a>
+        </div>
+      </section>
+      <p class="resume-preview-note" id="resume-preview-note" hidden>Read and zoom here. A file is saved only when you choose Download PDF.</p>
+
+      <section class="transcript-section" id="transcript" aria-labelledby="transcript-title">
+        <header class="resume-heading">
+          <div>
+            <p class="kicker">Academic record</p>
+            <h2 id="transcript-title">Transcript<span class="resume-dot">.</span></h2>
+          </div>
+          <div class="resume-actions">
+            <button class="btn primary" id="transcript-download" type="button" aria-label="Download transcript PDF" disabled aria-describedby="transcript-status">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4"/></svg>
+              Download PDF
+            </button>
+          </div>
+        </header>
+        <div class="resume-document glass" aria-label="Transcript document">
+          <div class="resume-toolbar">
+            <span class="resume-document-label">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H5v18h14V8l-5-5Z"/><path d="M14 3v5h5M8 12h8M8 16h6"/></svg>
+              Academic transcript
+            </span>
+            <div class="resume-reader-controls" id="transcript-reader-controls" hidden>
+              <button class="reader-control" type="button" id="transcript-zoom-out" aria-label="Zoom out transcript">−</button>
+              <output class="reader-zoom-level" id="transcript-zoom-level" aria-live="polite">100%</output>
+              <button class="reader-control" type="button" id="transcript-zoom-in" aria-label="Zoom in transcript">+</button>
+              <button class="reader-fit" type="button" id="transcript-fit">Fit width</button>
+            </div>
+            <span id="transcript-status" role="status">Not uploaded yet</span>
+          </div>
+          <div id="transcript-preview" class="resume-preview" role="region" aria-label="Transcript pages" tabindex="0" hidden></div>
+          <div class="resume-empty" id="transcript-empty">
+            <svg class="resume-empty-icon" viewBox="0 0 80 92" fill="none" aria-hidden="true"><rect x="11" y="4" width="58" height="80" rx="7" fill="var(--chip-bg)" stroke="currentColor" stroke-width="1.5"/><path d="M24 25h18M24 37h32M24 46h26M24 61h32M24 70h21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="62" cy="77" r="12" fill="var(--bg)" stroke="currentColor" stroke-width="1.5"/><path d="M58 77h8M62 73v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <h3 id="transcript-empty-title">Transcript coming soon</h3>
+            <p id="transcript-empty-copy">An academic transcript will appear here once it has been uploaded.</p>
+          </div>
+        </div>
+        <p class="resume-preview-note" id="transcript-preview-note" hidden>Read and zoom here. A file is saved only when you choose Download PDF.</p>
+      </section>
+      <noscript><p class="resume-preview-note">Enable JavaScript to display the document previews.</p></noscript>
+    </main>
+    <footer>
+      <p>© <span id="year"></span> · <span id="resume-owner">Armita Hoda</span> · <a href="./index.html">Back to portfolio</a></p>
+    </footer>
+  </div>
+  <script type="module" src="./src/resume.js?documents=2"></script>
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a38ca20ba9cb1663',t:'MTc4OTAyNDQzNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

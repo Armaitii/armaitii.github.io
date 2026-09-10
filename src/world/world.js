@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { terrainH, terrainGrad, updateCursorAndWake, setTime } from './lossField';
-import { CAM, THEMES } from './constants';
+import { CAM, THEMES, WORLD } from './constants';
 import { Surface } from './surface';
 import { Optimizer } from './optimizer';
 import { Dust } from './dust';
@@ -11,9 +11,8 @@ import { createPointer } from './pointer';
  *
  * Ball state machine:
  *   'roll'     — gradient descent on the terrain as usual
- *   'eject'    — occasionally the ball is "led out": it glides along the
- *                surface to the rim of the visible grid…
- *   'fall'     — …then it flies beyond the edge and plummets, spinning
+ *   'fall'     — only after rolling over an actual grid edge: gravity takes
+ *                over with the ball's existing momentum (no timer/ejection)
  *   'grounded' — fell out of the scene (hidden); the kinesin "rescue" runs
  *                in the DOM overlay (carrier.js)…
  *   'return'   — …and the ball pops back onto the surface (scale-pop + ring)
@@ -71,14 +70,12 @@ export class World {
 
     // ball phase state
     this.phase = 'roll';
-    this.nextFall = 30 + Math.random() * 20; // first "led out" moment
     this.groundedCleaned = true;
     this.fallV = new THREE.Vector3();
     this._projV = new THREE.Vector3();
+    this._edgeGrad = new Float32Array(2);
     this.fallNdcX = 0.5;   // screen axis of the fall (for the landing spot)
     this.returnT = 0;
-    this.ejectDirX = 1; this.ejectDirY = 0;
-    this.ejectV = 0; this.ejectT = 0;
     this.lastFrame = { loss: 0, speed: 0, grad: 0 };
 
     this.clock = new THREE.Clock();
@@ -121,52 +118,29 @@ export class World {
   // Ball lifecycle
   // -------------------------------------------------------------------------
 
-  /** Every so often the ball is "led out": it glides to the rim & falls. */
+  /** Lose support only when the ball actually crosses the visible grid rim. */
   _maybeTriggerFall() {
-    if (this.phase !== 'roll' || this.time < this.nextFall) return;
-    const p = this.optimizer.pos;
-    // steer toward the nearest grid edge so it visibly leaves the surface
-    if (Math.abs(p.x) >= Math.abs(p.y)) {
-      this.ejectDirX = Math.sign(p.x || 1);
-      this.ejectDirY = 0;
-    } else {
-      this.ejectDirX = 0;
-      this.ejectDirY = Math.sign(p.y || 1);
-    }
-    this.ejectV = Math.max(1.4, 1.1 + Math.random() * 0.8);
-    this.ejectT = 0;
-    this.phase = 'eject';
-  }
-
-  /** The ball is led along the surface to the edge of the visible grid. */
-  _stepEject(dt) {
+    if (this.phase !== 'roll') return false;
     const o = this.optimizer;
-    this.ejectT += dt;
-    this.ejectV = Math.min(9.2, this.ejectV + 6.2 * dt);
-    o.pos.x += this.ejectDirX * this.ejectV * dt;
-    o.pos.y += this.ejectDirY * this.ejectV * dt;
-    o.vel.set(0, 0);
-    const h = terrainH(o.pos.x, o.pos.y);
-    const m = o.mesh;
-    m.position.set(o.pos.x, h + 0.07, o.pos.y);
-    o.light.position.set(o.pos.x, h + 0.5, o.pos.y);
+    const { x, y: z } = o.pos;
+    const S = WORLD.SIZE;
+    if (Math.abs(x) <= S && Math.abs(z) <= S) return false;
 
-    const edge = Math.max(Math.abs(o.pos.x), Math.abs(o.pos.y));
-    if (edge >= 6.02 || this.ejectT > 2.6) {
-      // over the rim — ballistic fall off the grid
-      this.fallX = o.pos.x;
-      this.fallZ = o.pos.y;
-      this.fallY = h + 0.07;
-      this.fallV.set(
-        this.ejectDirX * Math.min(this.ejectV, 8.2),
-        1.6,
-        this.ejectDirY * Math.min(this.ejectV, 8.2)
-      );
-      m.rotation.set(0, 0, 0);
-      // schedule the next playful interlude
-      this.nextFall = this.time + 75 + Math.random() * 70;
-      this.phase = 'fall';
-    }
+    // Sample the last supported edge, not an invisible extension of the
+    // terrain. Preserve the rolling velocity instead of adding a launch kick.
+    const edgeX = THREE.MathUtils.clamp(x, -S, S);
+    const edgeZ = THREE.MathUtils.clamp(z, -S, S);
+    terrainGrad(edgeX, edgeZ, this._edgeGrad);
+    const verticalV = this._edgeGrad[0] * o.vel.x + this._edgeGrad[1] * o.vel.y;
+    this.fallX = x;
+    this.fallZ = z;
+    this.fallY = terrainH(edgeX, edgeZ) + 0.07;
+    this.fallV.set(o.vel.x, THREE.MathUtils.clamp(verticalV, -4, 4), o.vel.y);
+    o.mesh.position.set(this.fallX, this.fallY, this.fallZ);
+    o.light.position.set(this.fallX, this.fallY + 0.5, this.fallZ);
+    this.groundedCleaned = false;
+    this.phase = 'fall';
+    return true;
   }
 
   _stepFall(dt) {
@@ -200,7 +174,6 @@ export class World {
     if (this.phase !== 'grounded') return;
     const o = this.optimizer;
     // fresh interior spot with reasonably low terrain
-    const S = 6;
     let x = 0, y = 0, tries = 0;
     do {
       const a = Math.random() * Math.PI * 2;
@@ -227,7 +200,6 @@ export class World {
     this.phase = 'return';
     this.returnT = 0;
     this._spawnRing(x, h + 0.05, y);
-    this.nextFall = this.time + 75 + Math.random() * 70;
   }
 
   _spawnRing(x, y, z) {
@@ -255,7 +227,7 @@ export class World {
   _tick() {
     const dt = Math.min(this.clock.getDelta(), 0.05);
     this.time += dt;
-    const S = 6;
+    const S = WORLD.SIZE;
 
     setTime(this.time);
 
@@ -285,8 +257,7 @@ export class World {
     switch (this.phase) {
       case 'roll': {
         o.step(dt);
-        o.sync();
-        this._maybeTriggerFall();
+        if (!this._maybeTriggerFall()) o.sync();
         const bp = o.mesh.position;
         this.dust.update(dt, bp.x, bp.y, bp.z, o.vel.x, o.vel.y, o.speed);
         this.lastFrame = {
@@ -294,14 +265,6 @@ export class World {
           speed: o.speed,
           grad: o.gradientMag(),
         };
-        break;
-      }
-      case 'eject': {
-        this._stepEject(dt);
-        const bp = o.mesh.position;
-        this.dust.update(dt, bp.x, bp.y, bp.z, this.ejectDirX * this.ejectV, this.ejectDirY * this.ejectV, this.ejectV);
-        this.groundedCleaned = false;
-        this.lastFrame = { loss: terrainH(o.pos.x, o.pos.y), speed: this.ejectV, grad: 0 };
         break;
       }
       case 'fall': {

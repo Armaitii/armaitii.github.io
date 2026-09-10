@@ -1,5 +1,6 @@
 import './style.css';
 import { PROFILE, PROJECTS, SKILLS } from './content.js';
+import { currentTheme, wireThemeToggle } from './theme.js';
 
 /**
  * main.js — bootstraps the page: injects your content into the DOM and
@@ -17,18 +18,21 @@ function applyProfile() {
   const P = PROFILE;
   document.title = `${P.name} — ${P.role}`;
   $('#hero-name').textContent = P.name;
+  // The education badge's requested <b> and &nbsp; formatting lives in
+  // index.html. Do not replace its contents with plain profile text.
   $('#nav-name').textContent = P.shortName;
   $('#avatar').textContent = P.initials;
   $('#about-name').textContent = P.name.split(' ')[0];
   $('#about-p1').textContent = P.about[0] ?? '';
   $('#about-p2').textContent = P.about[1] ?? '';
-  $('#facts').innerHTML = (P.facts ?? []).map((f) => `<li>${esc(f)}</li>`).join('');
+  const facts = P.facts ?? (P.location ? [`📍 ${P.location}`] : []);
+  $('#facts').innerHTML = facts.map((f) => `<li>${esc(f)}</li>`).join('');
   $('#interests').innerHTML = (P.interests ?? []).map((i) => `<span class="chip">${esc(i)}</span>`).join('');
   $('#mail-btn').href = `mailto:${P.email}`;
   $('#mail-btn').textContent = P.email;
   const firstSentence = P.about[0]?.split('.')[0];
   $('#hero-lede').textContent = firstSentence ? firstSentence + '.' : '';
-  $('#hero-role').innerHTML = esc(P.role).replace(' & ', '<br/>& ');
+  $('#hero-role').textContent = P.role;
   $('#year').textContent = new Date().getFullYear();
 
   const gh = P.github.replace(/\/$/, '');
@@ -42,7 +46,6 @@ function applyProfile() {
       el.innerHTML = socialHTML(P);
     });
   }
-  if (P.resume) { $('#btn-resume').href = P.resume; $('#btn-resume').hidden = false; }
 }
 
 function socialHTML(P) {
@@ -59,62 +62,54 @@ function socialHTML(P) {
 // 2 · projects & skills
 // --------------------------------------------------------------------------
 function applyProjects() {
-  $('#project-grid').innerHTML = PROJECTS.map((p) => `
+  $('#project-grid').innerHTML = PROJECTS.map((p) => {
+    // A custom label overrides the default "featured" text. The featured
+    // flag still controls the card highlight, independently of its label.
+    const badge = p.badge ?? (p.featured ? 'featured' : '');
+    return `
     <article class="card ${p.featured ? 'featured' : ''}">
       <div class="card-top">
-        ${p.featured ? '<span class="feat-tag">featured</span>' : ''}
+        ${badge ? `<span class="feat-tag">${esc(badge)}</span>` : ''}
         ${p.stars != null ? `<span class="stars">★ ${p.stars}</span>` : ''}
       </div>
-      <h3><a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.title)}</a></h3>
+      <h3>${p.link?.trim() ? `<a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.title)}</a>` : esc(p.title)}</h3>
       <p>${esc(p.desc)}</p>
       <div class="card-bottom">
         <span class="chips">${p.tags.map((t) => `<span class="chip">${esc(t)}</span>`).join('')}</span>
         ${p.lang ? `<span class="lang"><i style="background:${p.langColor}"></i>${esc(p.lang)}</span>` : ''}
       </div>
-    </article>`).join('');
+    </article>`;
+  }).join('');
 }
 
+// Decorative, locally drawn icons; no ratings or invented proficiency levels.
+const SKILL_ART = [
+  { tone: 'blue', drawing: '<rect x="4" y="4" width="24" height="18" rx="4"/><path d="M11 28h10M16 22v6M12 10l-3 3 3 3m8-6 3 3-3 3"/>' },
+  { tone: 'violet', drawing: '<path d="M9 3c0 13 14 13 14 26M23 3c0 13-14 13-14 26M10 6h12M12 11h8M12 21h8M10 26h12"/>' },
+  { tone: 'teal', drawing: '<path d="M27 16c0 7-4 12-11 12S4 23 4 16 9 4 16 4s11 5 11 12Z"/><circle cx="15" cy="15" r="5"/><path d="m23 9-2 2M8 22l2-2M23 21h-3"/><circle cx="10" cy="9" r="1"/>' },
+  { tone: 'amber', drawing: '<path d="M4 5v23h24M7 23l5-7 4 4 5-13 5 6"/><circle cx="21" cy="7" r="2"/><path d="M27 4v3M25.5 5.5h3"/>' },
+];
+
 function applySkills() {
-  $('#skill-groups').innerHTML = SKILLS.map((g) => `
-    <div class="skill-group">
-      <h3>${esc(g.group)}</h3>
-      <div class="chips">${g.items.map((i) => `<span class="chip">${esc(i)}</span>`).join('')}</div>
-    </div>`).join('');
+  $('#skill-groups').innerHTML = SKILLS.map((g, index) => {
+    const art = SKILL_ART[index % SKILL_ART.length];
+    return `
+      <article class="skill-card" data-tone="${art.tone}" aria-labelledby="skill-group-${index}">
+        <div class="skill-card-top">
+          <span class="skill-icon" aria-hidden="true"><svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${art.drawing}</svg></span>
+          <span class="skill-number" aria-hidden="true">${String(index + 1).padStart(2, '0')} / ${String(SKILLS.length).padStart(2, '0')}</span>
+        </div>
+        <h3 id="skill-group-${index}">${esc(g.group)}</h3>
+        <ul class="skill-list">${g.items.map(item => `<li class="skill-pill">${esc(item)}</li>`).join('')}</ul>
+        <div class="skill-card-foot"><span>${g.items.length} ${g.items.length === 1 ? 'skill' : 'skills'}</span><span class="skill-rule" aria-hidden="true"></span></div>
+      </article>`;
+  }).join('');
 }
 
 // --------------------------------------------------------------------------
 // 3 · Theme toggle (light default, dark available — both themed live)
 // --------------------------------------------------------------------------
-const META_COLORS = { light: '#f2f5fc', dark: '#05070d' };
 let worldInstance = null;
-
-function currentTheme() {
-  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-}
-
-function setTheme(theme, persist = true) {
-  document.documentElement.setAttribute('data-theme', theme);
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', META_COLORS[theme]);
-  if (persist) {
-    try { localStorage.setItem('portfolio-theme-v2', theme); } catch (e) { /* ignore */ }
-  }
-  worldInstance?.applyTheme(theme); // retheme the live 3D scene too
-}
-
-function wireThemeToggle() {
-  const btn = $('#theme-toggle');
-  const syncIcon = () => {
-    const dark = currentTheme() === 'dark';
-    btn.classList.toggle('dark', dark);
-    btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
-  };
-  syncIcon();
-  btn.addEventListener('click', () => {
-    setTheme(currentTheme() === 'dark' ? 'light' : 'dark');
-    syncIcon();
-  });
-}
 
 // --------------------------------------------------------------------------
 // 4 · HUD + the 3D world
@@ -142,7 +137,7 @@ function boot() {
   applyProfile();
   applyProjects();
   applySkills();
-  wireThemeToggle();
+  wireThemeToggle((theme) => worldInstance?.applyTheme(theme));
 
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canvas = $('#scene');

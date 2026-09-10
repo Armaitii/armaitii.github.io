@@ -4,6 +4,7 @@ export const PROFILE = {
   shortName: 'Can you make the ball fall? :]',
   initials: 'AR',
   role: 'Biotechnology | Computational Biology | Epigenetics & Neurobiology',
+  education: "Master's degree Department of Biotechnology · University of Tehran",
 
   about: [
     "I'm not exactly a machine learning engineer, but sb who likes playing around with ideas creative machine learning engineers develop.",
@@ -16,11 +17,12 @@ export const PROFILE = {
 
   interests: ['chromatin regulation', 'neurodevelopmental disorders', 'epigenetics', 'RNA biology', 'therapeutics'],
 
-  // resume: set to 'resume.pdf' once you drop a PDF into public/
+  // Download filename. The reader imports the PDF from src/assets/Armita_Hoda_CV.pdf.
   resume: 'Armita_Hoda_CV.pdf',
 };
 
 
+// Optional badge: any label, e.g. "Thesis" or "Research". Omit to keep the featured default.
 export const PROJECTS = [
   {
     title: 'Mechanistic cell-free DNA fragmentation simulation',
@@ -41,6 +43,7 @@ export const PROJECTS = [
     langColor: '#e15cff',
     link: '',
 
+    badge: 'Thesis',
     featured: true,
   },
   {
