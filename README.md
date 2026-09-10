@@ -1,91 +1,270 @@
-# Loss Landscape Portfolio
+# Armita Hoda — Personal Portfolio
 
-A personal portfolio site with an interactive **gradient-descent / loss-landscape**
-background: a glowing ball performs gradient descent on a bumpy **wireframe
-grid surface** that slowly drifts and breathes — and **your cursor reshapes the
-terrain in real time**, leaving a smooth wake of hills behind it.
+Personal research and technical portfolio of **Armita Hoda**, a biotechnology researcher interested in **chromatin regulation, epigenetics, neurobiology, and mechanistic biology**.
 
-Every so often the ball is "led out" over the rim of the surface, plummets to
-the bottom of the page… and a cute cartoon **kinesin** (the walking motor
-protein) trots in along the page edge, scoops the fallen ball up as cargo and
-carries it away — after which the ball pops right back onto the landscape.
+🌐 **Website:** [armaitii.github.io](https://armaitii.github.io)
 
-Light theme by default, dark theme available (toggle in the nav — it rethemes
-both the page and the live WebGL scene). Vanilla JS + [three.js](https://threejs.org)
-+ [Vite](https://vitejs.dev) · deployed to GitHub Pages via Actions.
+The portfolio brings together my research projects, computational work, scientific interests, technical skills, and CV.
 
-## What you're watching
+---
 
-- **The terrain is one analytic function** `f(x, y)` (see `lossField.js`): a
-  wandering bowl, drifting/breathing Gaussian wells, a soft valley and etched
-  dips. Heights *and* exact gradients are computed every frame — no meshes.
-- **The whole field is alive**: wells wander and trade depth back and forth on
-  ~1-minute cycles, so the title of "deepest basin" migrates across the map —
-  there is no fixed place to rest.
-- **The ball never stops and never "finds" a minimum**: it's continuous
-  gradient descent with momentum, friction and thermal noise. When it lulls in
-  a basin it gets an uphill energy jolt; if jolts fail, the terrain gently
-  **rises beneath it** (simulated-annealing style) until it spills over the rim
-  and rolls off to the next basin. No teleports, no resets, no messages.
-- **Your cursor adds hills**: a main hill that follows the pointer smoothly,
-  plus a fading **wake** of small hills deposited along its path. All of it is
-  part of the terrain the ball rolls on, so your motion steers the optimizer.
-- **The surface never sleeps**: broad swell-like **waves** roll across the map
-  even when the cursor is idle, so the landscape is always undulating.
-- The surface is drawn as a **grid**: a semi-transparent mesh colored by
-  height (soft pastel palette in light mode, vivid plasma in dark) under a
-  wireframe of grid lines sharing the same vertices.
-- Behind the ball streams **magical dust** — tiny GPU specks that drift,
-  twinkle and fade — instead of a solid ribbon.
-- HUD shows live `loss · ‖∇L‖ · speed` — purely numeric, no "minima found".
+## About
 
-## Files
+My research interests lie at the intersection of **biotechnology, genomics, epigenetics, and neurobiology**.
 
+I am particularly interested in understanding how molecular and epigenetic mechanisms regulate cellular identity and development, with a growing focus on:
+
+- Chromatin regulation
+- Neuroepigenetics
+- Neurodevelopment
+- Neurodevelopmental and psychiatric disorders
+- RNA biology
+- Epigenome editing
+- Mechanistic biology
+- Therapeutic approaches to molecular regulation
+
+My work combines experimental biology with computational analysis and mechanistic modeling where appropriate.
+
+---
+
+## Research Projects
+
+### 🧬 Mechanistic cfDNA Fragmentation
+
+An epigenome-aware mechanistic model of cell-free DNA fragmentation.
+
+The project investigates how **chromatin organization, nucleosome positioning, genomic context, and nuclease-specific cleavage preferences** contribute to observed cfDNA fragment patterns.
+
+The computational framework uses stochastic simulation to model fragmentation dynamics and is evaluated using a range of fragmentomics features.
+
+**Focus:**  
+`cfDNA` · `Epigenetics` · `Nucleosome positioning` · `Stochastic simulation` · `Fragmentomics`
+
+---
+
+### 🧠 Neuropsychiatric Chromatin Regulation
+
+An analysis connecting **neuropsychiatric disease-associated genetic variation** with cell-type-specific chromatin accessibility in the human brain.
+
+The project uses GWAS summary statistics together with chromatin accessibility annotations to investigate enrichment of genetic risk across neuronal and other brain cell populations.
+
+**Focus:**  
+`GWAS` · `S-LDSC` · `snATAC-seq` · `Chromatin accessibility` · `Neuropsychiatric disorders`
+
+---
+
+### 📊 cfDNA Fragmentomics Metrics
+
+Implementation and visualization of fragmentomics metrics for evaluating simulated cfDNA fragmentation against experimental data.
+
+The analysis examines fragment length, nucleosome positioning, fragment-end patterns, periodicity, WPS trajectories, and other sequence- and structure-associated features.
+
+**Focus:**  
+`Fragmentomics` · `WPS` · `Nucleosome footprints` · `Signal analysis` · `Python`
+
+---
+
+### 💸 Splitwise Settler
+
+A small web application for simplifying shared expenses.
+
+Given a collection of balances, the application calculates a minimal set of payments that settles the group while reducing unnecessary transactions.
+
+**Focus:**  
+`JavaScript` · `Algorithms` · `Data structures` · `Web development`
+
+---
+
+## Interactive Background
+
+The portfolio is built around an interactive **loss-landscape / gradient-descent visualization**.
+
+A glowing particle continuously moves across a dynamically changing mathematical landscape. The terrain responds to the user's cursor, allowing the visitor to influence the optimization process.
+
+The visualization includes:
+
+- An analytically defined loss field
+- Exact gradient computation
+- Continuous gradient descent with momentum
+- Friction and stochastic perturbations
+- Dynamic Gaussian wells and valleys
+- Cursor-generated terrain and wake effects
+- Animated surface waves
+- GPU particle effects
+- Live loss, gradient-norm, and velocity readouts
+- Light and dark visual themes
+
+There is also a small biological easter egg: when the particle eventually leaves the landscape, a cartoon **kinesin motor protein** appears and carries it away as cargo before the simulation resumes.
+
+The background is deliberately playful, but the underlying system is an actual real-time numerical and graphical simulation.
+
+---
+
+## Technology
+
+The portfolio is intentionally lightweight and uses browser-native technologies rather than a large application framework.
+
+- **JavaScript**
+- **Three.js**
+- **WebGL**
+- **Vite**
+- **HTML / CSS**
+- **GitHub Actions**
+- **GitHub Pages**
+
+---
+
+## Project Structure
+
+```text
+.
+├── index.html
+├── resume.html
+├── package.json
+├── vite.config.js
+│
+├── public/
+│   └── static assets
+│
+├── src/
+│   ├── content.js
+│   ├── main.js
+│   ├── style.css
+│   ├── resume.js
+│   ├── resume.css
+│   │
+│   └── world/
+│       ├── constants.js
+│       ├── lossField.js
+│       ├── optimizer.js
+│       ├── pointer.js
+│       ├── surface.js
+│       ├── world.js
+│       └── dust.js
+│
+└── .github/
+    └── workflows/
+        └── deploy.yml
 ```
-index.html                      page: 3D background + content + theme toggle
-src/content.js   ← EDIT         all your personal info & projects
-src/style.css                   light/dark themes via html[data-theme], layout
-src/main.js                     content injection, theme controller, boot
-src/world/lossField.js          f(x,y) + ∇f + cursor hills/wake + waves + anneal
-src/world/surface.js            grid mesh + wireframe: heights/normals/colors
-src/world/optimizer.js          the ball: light momentum GD + boosts + anneal
-src/world/dust.js               magical dust particle trail behind the ball
-src/world/pointer.js            mouse/touch → terrain intersection
-src/world/world.js              renderer, lights, camera drift, animation loop
-src/world/constants.js          sizes, camera, light/dark 3D palettes
-.github/workflows/deploy.yml    auto build & publish to Pages
+
+### Key files
+
+| File | Purpose |
+|---|---|
+| `src/content.js` | Personal information, research interests, projects, skills and links |
+| `src/main.js` | Application entry point and content/theme handling |
+| `src/style.css` | Portfolio layout and light/dark themes |
+| `src/world/lossField.js` | Mathematical loss landscape and gradients |
+| `src/world/optimizer.js` | Gradient-descent particle dynamics |
+| `src/world/surface.js` | 3D landscape rendering |
+| `src/world/pointer.js` | Mouse/touch interaction with the landscape |
+| `src/world/world.js` | Three.js scene, camera and animation loop |
+| `src/world/dust.js` | GPU particle effects |
+| `resume.html` | CV/resume page |
+| `.github/workflows/deploy.yml` | Automatic GitHub Pages deployment |
+
+---
+
+## Run Locally
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Armaitii/armaitii.github.io.git
+cd armaitii.github.io
 ```
 
-## Run locally
+Install dependencies:
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173
-npm run build    # static site → dist/
 ```
 
-## Make it yours
+Start the development server:
 
-1. Edit **`src/content.js`** — name, about, links, projects, skills (every
-   `yourusername` / `Your Name` placeholder flows from this one file).
-2. Optional: drop `resume.pdf` in `public/` and set `resume: 'resume.pdf'`.
-3. Push to your `username.github.io` repository → the Actions workflow deploys
-   automatically. (Relative asset URLs mean it also works on a subpath.)
+```bash
+npm run dev
+```
 
-## Tuning knobs (one-liners)
+The site will normally be available at:
 
-| What | Where |
-| --- | --- |
-| Ball speed / friction / boost strength | `CONFIG` in `src/world/optimizer.js` |
-| Terrain shape (wells, hills, valley) | `WELLS`, `HILLS` in `src/world/lossField.js` |
-| Idle "waves" across the surface | `WAVES` in `src/world/lossField.js` |
-| Cursor hill + wake size/feel | `CURSOR`, `WAKE` in `src/world/lossField.js` |
-| Anneal lift (gentle) | `ANNEAL` in `src/world/lossField.js` |
-| Camera angle, drift, parallax | `CAM` in `src/world/constants.js` |
-| Grid fineness / mesh transparency | `RES`, `opacity` in `src/world/surface.js` |
-| How often the ball is "led out" | `nextFall` schedule in `src/world/world.js` |
-| Kinesin rescue timing | `after(...)` in `src/carrier.js` |
-| Surface palettes (light/dark) | `PAL_LIGHT`, `PAL_DARK` in `src/world/surface.js` |
-| Dust colours / density | `PALETTES`, `rate` in `src/world/dust.js` |
-| Light/dark 3D scene colors | `THEMES` in `src/world/constants.js` |
-| Page colors | CSS variables in `src/style.css` |
+```text
+http://localhost:5173
+```
+
+Build the production version:
+
+```bash
+npm run build
+```
+
+The production output is generated in `dist/`.
+
+---
+
+## Customization
+
+Most personal content is centralized in:
+
+```text
+src/content.js
+```
+
+This includes:
+
+- Name and profile
+- About section
+- Research interests
+- Contact information
+- CV link
+- Projects
+- Skills
+
+The interactive visualization can be customized independently through the files in:
+
+```text
+src/world/
+```
+
+Some of the main parameters include:
+
+- Particle speed and friction
+- Gradient-descent behavior
+- Terrain wells and hills
+- Cursor interaction
+- Surface waves
+- Simulated annealing
+- Camera movement
+- Grid resolution
+- Particle effects
+- Light/dark visualization palettes
+
+---
+
+## Deployment
+
+The repository is configured for deployment through **GitHub Pages**.
+
+Changes pushed to the `main` branch are built and published automatically through the GitHub Actions workflow.
+
+Because this repository follows the `username.github.io` naming convention, the deployed site is available at:
+
+**https://armaitii.github.io**
+
+---
+
+## Design Philosophy
+
+The portfolio intentionally combines two things that are usually presented separately:
+
+**scientific work** and **technical experimentation**.
+
+The research content is the primary purpose of the site. The interactive visualization provides a more personal way of presenting the computational side of my work and reflects my interest in exploring ideas through simulation and visualization.
+
+The result is meant to be a research portfolio rather than a conventional software-development portfolio: a place to document scientific questions, projects, methods, and the direction I want to take my research.
+
+---
+
+## License
+
+This repository contains personal portfolio content and original research-related material. Please contact me before reusing substantial portions of the site's content, design, or assets.
