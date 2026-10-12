@@ -4,7 +4,7 @@ You can read more about me here:
 
 🌐 **[armaitii.github.io](https://armaitii.github.io)**
 
-Bonus: There is a cute surprise waiting for you if you manage to throw the ball out of the surface! :)
+Bonus: There is a cute (biology related) surprise waiting for you if you manage to throw the ball out of the surface! :)
 
 The site's background is not a video, a GIF, or a pre-baked animation. It is a live
 **loss-landscape simulation**: an analytic loss field `f(x, y)` rendered as a morphing
