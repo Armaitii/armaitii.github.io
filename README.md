@@ -1,119 +1,161 @@
 # Armita Hoda — Personal Portfolio
 
-Personal research and technical portfolio of **Armita Hoda**, a biotechnology researcher interested in **chromatin regulation, epigenetics, neurobiology, and neurodevelopmental disorders**.
+🌐 **[armaitii.github.io](https://armaitii.github.io)**
 
-🌐 **Website:** [armaitii.github.io](https://armaitii.github.io)
-
-The portfolio brings together my research projects, computational work, scientific interests, technical skills, and CV.
-
----
-
-## About
-
-My research interests lie at the intersection of **biotechnology, genomics, epigenetics, and therapeutics**.
-
-I am particularly interested in understanding how molecular and epigenetic mechanisms regulate cellular identity and development, with a growing focus on:
-
-- Chromatin regulation
-- Neuroepigenetics
-- Neurodevelopmental and psychiatric disorders
-- RNA biology
-- Epigenome editing
-- Mechanistic biology
-- Therapeutic approaches to molecular regulation
-
-My work combines experimental biology with computational analysis and mechanistic modeling where appropriate.
+The site's background is not a video, a GIF, or a pre-baked animation. It is a live
+**loss-landscape simulation**: an analytic loss field `f(x, y)` rendered as a morphing
+3D grid, with a glowing **ball rolling gradient descent** on top of it. The cursor
+deforms the terrain, so the visitor can steer the optimizer in real time.
 
 ---
 
-## Research Projects
+## How it works
 
-### 🧬 Mechanistic cfDNA Fragmentation
+### The surface — an analytic loss landscape
 
-An epigenome-aware mechanistic model of cell-free DNA fragmentation.
+The terrain is a mathematical function, not a mesh someone modelled.
 
-The project investigates how **chromatin organization, nucleosome positioning, genomic context, and nuclease-specific cleavage preferences** contribute to observed cfDNA fragment patterns.
+- `src/world/lossField.js` defines `f(x, y)` as a sum of building blocks:
+  a wandering central bowl, a soft valley, a raised ridge, a set of **Gaussian wells**
+  (local minima) and **raised hills**, plus several broad **travelling waves** that
+  sweep across the map on Lissajous paths.
+- `sample(x, y, out)` returns the height **and** the exact gradient `∇f` in a single
+  pass — no numerical differentiation, no finite differences. Everything downstream
+  (the ball's descent direction, the surface normals, the HUD readouts) uses that one
+  exact gradient.
+- `setTime(t)` is called once per frame and animates the whole field: the pattern
+  slowly rotates and sways, wells wander, their depths pulse, and the travelling waves
+  keep moving. The landscape is never static, so the ball can never truly park.
+- `src/world/surface.js` samples that field on a parametric grid (one vertex per
+  0.3 world units), writes heights into the vertical component, recomputes analytic
+  normals `∝ (−∂h/∂x, 1, −∂h/∂z)`, and recolours every vertex by its normalized height.
+  A `LineSegments` wireframe shares the *same* position buffer, so the grid always
+  follows the terrain exactly.
+- A vertex-colour palette maps low → high: dusky violet valleys up to warm sand peaks on
+  the light theme, and a vivid plasma ramp on the dark theme.
 
-The computational framework uses stochastic simulation to model fragmentation dynamics and is evaluated using a range of fragmentomics features.
+### The ball — continuous gradient descent
 
-**Focus:**  
-`cfDNA` · `Epigenetics` · `Nucleosome positioning` · `Stochastic simulation` · `Fragmentomics`
+`src/world/optimizer.js` is the optimizer. Each frame it:
 
----
+1. samples `∇f` at its position and accelerates **downhill** (`−∇f`, normalised),
+   with **extra cost when moving against the slope** (`up`), which produces inertia
+   and overshoot;
+2. integrates velocity, applies a **speed cap** and **dt-corrected friction**;
+3. adds a trace of **thermal noise**, so it is never pixel-still.
 
-### 🧠 Neuropsychiatric Chromatin Regulation
+It never stops, never resets, and never teleports. When it settles into a basin and its
+smoothed speed drops below the lull threshold for long enough, an **escape engine** kicks
+in: first a smooth uphill **boost** (scaled to how deep the local basin is), and if a few
+boosts fail, the terrain **rises underneath it** — a simulated-annealing mound — until the
+ball spills over the rim and rolls away. Everything it rolls on is the same terrain that is
+rendered: base landscape + cursor hill + cursor wake + anneal mound.
 
-An analysis connecting **neuropsychiatric disease-associated genetic variation** with cell-type-specific chromatin accessibility in the human brain.
+### The cursor
 
-The project uses GWAS summary statistics together with chromatin accessibility annotations to investigate enrichment of genetic risk across neuronal and other brain cell populations.
+`src/world/pointer.js` raycasts the pointer onto the terrain plane each frame.
+`lossField.js` then turns that into a smoothed Gaussian **hill** that follows the cursor
+(and melts away when it leaves), plus a **wake**: a string of smaller hills deposited
+along the pointer's path, which swell in and fade back out over a few seconds. Both bend
+the visible mesh *and* the gradient the ball feels, so dragging the cursor is the same as
+reshaping the loss function.
 
-**Focus:**  
-`GWAS` · `S-LDSC` · `snATAC-seq` · `Chromatin accessibility` · `Neuropsychiatric disorders`
+### When the ball falls off — the kinesin rescue
 
----
+There is no invisible wall. Momentum or a cursor-made slope can push the ball past the
+grid rim, and then `world.js` hands it over to gravity: it keeps its exact rolling
+velocity, tumbles, and plummets while a trail of sparkles follows it. When it lands at the
+bottom of the page, `src/carrier.js` draws a **kinesin motor protein** on a canvas overlay
+that walks in hand-over-hand on a microtubule track, picks the ball up as cargo, and
+carries it off. The ball then pops back onto the surface with an ease-out-back scale pop
+and an expanding ring.
 
-### 📊 cfDNA Fragmentomics Metrics
+### Atmosphere
 
-Implementation and visualization of fragmentomics metrics for evaluating simulated cfDNA fragmentation against experimental data.
-
-The analysis examines fragment length, nucleosome positioning, fragment-end patterns, periodicity, WPS trajectories, and other sequence- and structure-associated features.
-
-**Focus:**  
-`Fragmentomics` · `WPS` · `Nucleosome footprints` · `Signal analysis` · `Python`
-
----
-
-### 💸 Splitwise Settler
-
-A small web application for simplifying shared expenses.
-
-Given a collection of balances, the application calculates a minimal set of payments that settles the group while reducing unnecessary transactions.
-
-**Focus:**  
-`JavaScript` · `Algorithms` · `Data structures` · `Web development`
-
----
-
-## Interactive Background
-
-The portfolio is built around an interactive **loss-landscape / gradient-descent visualization**.
-
-A glowing particle continuously moves across a dynamically changing mathematical landscape. The terrain responds to the user's cursor, allowing the visitor to influence the optimization process.
-
-The visualization includes:
-
-- An analytically defined loss field
-- Exact gradient computation
-- Continuous gradient descent with momentum
-- Friction and stochastic perturbations
-- Dynamic Gaussian wells and valleys
-- Cursor-generated terrain and wake effects
-- Animated surface waves
-- GPU particle effects
-- Live loss, gradient-norm, and velocity readouts
-- Light and dark visual themes
-
-There is also a small biological easter egg: when the particle eventually leaves the landscape, a cartoon **kinesin motor protein** appears and carries it away as cargo before the simulation resumes.
-
-The background is deliberately playful, but the underlying system is an actual real-time numerical and graphical simulation.
-
----
-
-## Technology
-
-The portfolio is intentionally lightweight and uses browser-native technologies rather than a large application framework.
-
-- **JavaScript**
-- **Three.js**
-- **WebGL**
-- **Vite**
-- **HTML / CSS**
-- **GitHub Actions**
-- **GitHub Pages**
+- `src/world/dust.js` — a pooled GPU point system with a soft radial sprite shader:
+  the ball sheds glowing specks that drift, twinkle and fade; the emission rate scales
+  with its speed. Each theme has its own particle palette.
+- `src/world/world.js` — owns the renderer, scene, fog, lights and the frame loop, plus
+  the ball's small state machine (`roll` → `fall` → `grounded` → `return`) and the camera's
+  parallax + idle sway.
+- `src/main.js` injects the page content and drives the on-screen HUD
+  (`loss`, `‖∇L‖`, `speed`) and the light/dark theme switch, which retints both the CSS
+  theme and the WebGL scene together.
+- Visitors with `prefers-reduced-motion: reduce` (or no WebGL) get a static, animation-free
+  fallback instead of the simulation.
 
 ---
 
-## Project Structure
+## Tweaking the simulation
+
+Everything is parameterised by plain objects and constants near the top of each module —
+no build step or external config file is involved. Edit, save, and the dev server hot-reloads.
+
+### The ball's motion — `src/world/optimizer.js` → `CONFIG`
+
+| Parameter | Default | What it does |
+|---|---|---|
+| `maxSpeed` | `3.4` | Speed ceiling in world units/second. **This is the main "make the ball faster" dial.** |
+| `accel` | `7.2` | How hard it accelerates downhill; higher = snappier, more responsive. |
+| `friction` | `0.034` | Exponential damping. Lower = longer, floatier coasts; higher = heavy ball that stops quickly. |
+| `up` | `0.9` | Extra resistance when moving uphill (`< 1` because the direction is scaled by it). Raise toward `1.2` for a heavier ball that struggles out of basins. |
+| `noise` | `0.015` | Random thermal jitter. `0` makes it perfectly deterministic-looking. |
+
+A "faster but still fluid" starting point: `maxSpeed: 5.5`, `accel: 10`, `friction: 0.028`.
+
+### The escape engine — same file, same `CONFIG`
+
+| Parameter | Default | What it does |
+|---|---|---|
+| `lullSpeed` | `0.3` | Speed below which the ball counts as lulling. |
+| `lullTime` | `2.2` | Seconds of lulling before it gets a boost. |
+| `flatKick` | `2.2` | Base strength of the uphill boost. |
+| `boostDecay` | `1.9` | How fast an active boost tapers off. |
+| `maxKicks` | `3` | Failed boosts before the annealing mound rises. Set very high to disable the mound entirely. |
+
+### Terrain shape — `src/world/lossField.js`
+
+| Constant | What it is |
+|---|---|
+| `FIELD.SIZE` (`6`) | Half-width of the field: the world is `[-SIZE, SIZE]²`. Bigger field = more room to roam, and the rim the ball can fall off is further away. |
+| `WELLS` | `[cx, cy, σ, depth]` per basin. Add rows for more local minima, make depths more negative for deeper traps. |
+| `HILLS` | `[cx, cy, σ, height]` raised bumps — the "bumpy 3D" texture. |
+| `WAVES` | `[xRadius, yRadius, speed1, speed2, phase1, phase2, σ, amp]` travelling swells. Raise `amp` for a more dramatic breathing field. |
+| `WELL_ANIM` | `[wanderAmp, wanderSpeed, phase, depthPulseAmp]` per well — how much each basin drifts and breathes. |
+| `setTime()` | Contains the field's global rotation (`0.10 * Math.sin(0.038 * t)`) and the central bowl's wander amplitudes. |
+
+### Cursor influence — same file
+
+| Constant | Default | What it does |
+|---|---|---|
+| `CURSOR.band` | `0.85` | Full height of the hill under the cursor. |
+| `CURSOR.width2` | `0.55` | Squared radius — larger = broader, gentler slope. |
+| `FOLLOW` / `SWELL` | `0.17` / `0.05` | How fast the hill chases the pointer / fades in. |
+| `WAKE.spacing`, `.band`, `.width2`, `.max`, `.cut2` | `0.55`, `0.5`, `0.45`, `7`, `3.2` | Deposit spacing, height, radius, count and pruning radius of the fading wake trail. |
+| `wakeAmp()` | — | The wake envelope: rise over 0.7 s, hold, melt away by ~6 s. |
+| `ANNEAL.band`, `.width2` | `1.05`, `7.5` | Height and radius of the annealing mound. `updateAnneal()` sets its rise/fall rates. |
+
+### Surface, camera, particles, themes
+
+| File | Parameter | Effect |
+|---|---|---|
+| `surface.js` | `RES` (`0.3`) | World units per grid segment — smaller = denser grid, prettier and costlier. |
+| `surface.js` | `opacity` (`0.72`) | How much the page shows through the surface. |
+| `surface.js` | `PAL_DARK` / `PAL_LIGHT` | Height → colour ramps (`[t, r, g, b]` control points). |
+| `constants.js` | `CAM.base`, `.parallax`, `.sway`, `.fov` | Camera distance, cursor parallax, idle drift and field of view. |
+| `constants.js` | `THEMES.light` / `.dark` | Clear colour, fog density, grid colour/opacity, light rigs. Both themes are switched live from the theme toggle. |
+| `dust.js` | `POOL` (`260`) | Particle pool size. |
+| `dust.js` | `rate` in `update()` | Emission rate — `22 + 70 * min(1, speed/2.4)` when moving, `7` when idling. |
+| `dust.js` | `life`, `size`, `drag` | Sparkle lifetime, sprite size and drift damping. |
+| `dust.js` | `PALETTES` | Per-theme particle colours. |
+| `optimizer.js` | `SphereGeometry(0.17, 28, 28)`, material | Ball radius, tessellation, colour, emissive glow. |
+| `world.js` | `-13 * dt` in `_stepFall`, `fallY < -2.6` | Fall gravity and the depth at which the ball counts as grounded. |
+| `world.js` | `7` / `4.5` rad/s tumbling, `0.35` air drag | How the ball tumbles and slows during the fall. |
+| `carrier.js` | `D.step`, `D.halfT`, `D.headY`, `D.trackY`, `D.lift` | The kinesin's stride length, gait speed and geometry. |
+
+---
+
+## Project structure
 
 ```text
 .
@@ -126,132 +168,46 @@ The portfolio is intentionally lightweight and uses browser-native technologies 
 │   └── static assets
 │
 ├── src/
-│   ├── content.js
-│   ├── main.js
+│   ├── content.js        # page text, projects, skills (all in one place)
+│   ├── main.js           # bootstrap: content injection, HUD, world startup
 │   ├── style.css
+│   ├── theme.js          # shared light/dark toggle
 │   ├── resume.js
 │   ├── resume.css
+│   ├── pdfPreview.js     # in-page CV/transcript viewer
+│   ├── carrier.js        # the kinesin canvas vignette
+│   ├── assets/           # CV & transcript PDFs
 │   │
 │   └── world/
-│       ├── constants.js
-│       ├── lossField.js
-│       ├── optimizer.js
-│       ├── pointer.js
-│       ├── surface.js
-│       ├── world.js
-│       └── dust.js
+│       ├── constants.js  # world size, camera, theme palettes
+│       ├── lossField.js  # analytic f(x, y), gradient, cursor, wake, annealing
+│       ├── optimizer.js  # the ball: descent + momentum + escape engine
+│       ├── surface.js    # morphing grid, normals, height colormaps
+│       ├── pointer.js    # cursor → terrain-plane raycast
+│       ├── world.js      # renderer, scene, camera, frame loop, ball lifecycle
+│       ├── dust.js       # GPU sparkle trail
+│       └── trail.js      # optional fading ribbon variant (not mounted by default)
 │
-└── .github/
-    └── workflows/
-        └── deploy.yml
+└── .github/workflows/deploy.yml
 ```
 
-### Key files
-
-| File | Purpose |
-|---|---|
-| `src/content.js` | Personal information, research interests, projects, skills and links |
-| `src/main.js` | Application entry point and content/theme handling |
-| `src/style.css` | Portfolio layout and light/dark themes |
-| `src/world/lossField.js` | Mathematical loss landscape and gradients |
-| `src/world/optimizer.js` | Gradient-descent particle dynamics |
-| `src/world/surface.js` | 3D landscape rendering |
-| `src/world/pointer.js` | Mouse/touch interaction with the landscape |
-| `src/world/world.js` | Three.js scene, camera and animation loop |
-| `src/world/dust.js` | GPU particle effects |
-| `resume.html` | CV/resume page |
-| `.github/workflows/deploy.yml` | Automatic GitHub Pages deployment |
+Page copy lives in `src/content.js`; visual behaviour lives in `src/world/`.
 
 ---
 
-## Run Locally
-
-Clone the repository:
+## Run locally
 
 ```bash
 git clone https://github.com/Armaitii/armaitii.github.io.git
 cd armaitii.github.io
-```
-
-Install dependencies:
-
-```bash
 npm install
+npm run dev     # http://localhost:5173
+npm run build   # production output in dist/
 ```
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The site will normally be available at:
-
-```text
-http://localhost:5173
-```
-
-Build the production version:
-
-```bash
-npm run build
-```
-
-The production output is generated in `dist/`.
-
----
-
-## Customization
-
-Most personal content is centralized in:
-
-```text
-src/content.js
-```
-
-This includes:
-
-- Name and profile
-- About section
-- Research interests
-- Contact information
-- CV link
-- Projects
-- Skills
-
-The interactive visualization can be customized independently through the files in:
-
-```text
-src/world/
-```
-
-Some of the main parameters include:
-
-- Particle speed and friction
-- Gradient-descent behavior
-- Terrain wells and hills
-- Cursor interaction
-- Surface waves
-- Simulated annealing
-- Camera movement
-- Grid resolution
-- Particle effects
-- Light/dark visualization palettes
-
----
 
 ## Deployment
 
-The repository is configured for deployment through **GitHub Pages**.
-
-Changes pushed to the `main` branch are built and published automatically through the GitHub Actions workflow.
-
-Because this repository follows the `username.github.io` naming convention, the deployed site is available at:
+Pushing to `main` builds and publishes the site via the GitHub Actions workflow in
+`.github/workflows/deploy.yml` using **GitHub Pages**:
 
 **https://armaitii.github.io**
-
----
-
-## License
-
-This repository contains personal portfolio content and original research-related material. Please contact me before reusing substantial portions of the site's content, design, or assets.
