@@ -86,7 +86,7 @@ export const PROJECTS = [
     tags: ['three.js', 'WebGL'],
     lang: 'JavaScript',
     langColor: '#f1e05a',
-    link: 'https://github.com/armaitii/aramitii.github.io',
+    link: 'https://github.com/armaitii/armaitii.github.io',
     featured: false,
   },
 ];
