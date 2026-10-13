@@ -41,16 +41,16 @@ export const PROJECTS = [
 
     lang: 'Python',
     langColor: '#e15cff',
-    link: '',
+    link: 'https://github.com/armaitii/TRIMED',
 
     badge: 'Thesis',
     featured: true,
   },
   {
-    title: 'neuropsychiatric regulation analysis',
+    title: 'GWAS Trait regulation analysis',
 
     desc:
-      'Analysis of genetic associations between neuropsychiatric traits and cell-type-specific chromatin accessibility using GWAS summary statistics and stratified LD score regression.',
+      'Workflow for genetic associations between neuropsychiatric traits and cell-type-specific chromatin accessibility using GWAS summary statistics and stratified LD score regression.',
 
     tags: [
       'GWAS',
@@ -61,11 +61,11 @@ export const PROJECTS = [
 
     lang: 'Python',
     langColor: '#e15cff',
-    link: '',
+    link: 'https://github.com/armaitii/PsychCellLDSC',
     featured: true,
   },  
   {
-    title: 'Settle-Up',
+    title: 'Settle Up',
     desc:
       'A lightweight expense-settlement tool that simplifies shared expenses by calculating the minimum set of payments needed to settle balances.',
 
@@ -77,16 +77,16 @@ export const PROJECTS = [
     ],
     lang: 'TypeScript',
     langColor: '#37eeff',
-    link: '',
+    link: 'https://github.com/armaitii/Settle-up',
     featured: false,
   },  
   {
-    title: 'grad-descent-playground',
-    desc: 'Interactive WebGL loss-landscape toy — the exact visual that runs behind this page. A ball does gradient descent while your cursor deforms the surface.',
+    title: 'Portfolio',
+    desc: 'The exact visual that runs behind this page. A ball does gradient descent while your cursor deforms the surface.',
     tags: ['three.js', 'WebGL'],
     lang: 'JavaScript',
     langColor: '#f1e05a',
-    link: 'https://github.com/armaitii/grad-descent-playground',
+    link: 'https://github.com/armaitii/aramitii.github.io',
     featured: false,
   },
 ];
