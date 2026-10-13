@@ -7,11 +7,10 @@ export const PROFILE = {
   education: "Master's degree Department of Biotechnology · University of Tehran",
 
   about: [
-    "I'm not exactly a machine learning engineer, but sb who likes playing around with ideas creative machine learning engineers develop.",
-    "This site's background is exactly that: a ball performing gradient descent on a loss landscape, and your cursor reshapes the terrain in real time. Everything you see is computed live, including the normals.",
+"I'm particularly interested in chromatin architecture, epigenetics, and the molecular mechanisms underlying neurodevelopmental and psychiatric disorders. For my next research step, I want to connect these mechanistic questions with experimental biological systems and explore how a deeper understanding of regulation could inform therapeutic strategies.",
   ],
 
-  location: 'Tehran, IR',
+  location: 'University Tehran, IR',
   email: 'armita.hoda@gmail.com',
   github: 'https://github.com/armaitii',
 
@@ -25,7 +24,7 @@ export const PROFILE = {
 // Optional badge: any label, e.g. "Thesis" or "Research". Omit to keep the featured default.
 export const PROJECTS = [
   {
-    title: 'Mechanistic cell-free DNA fragmentation simulation',
+    title: 'Cell-free DNA fragmentation process simulation',
 
     desc:
       'Thesis: Epigenome-aware modeling of cfDNA fragmentation using stochastic simulation, nucleosome organization, nuclease-specific cleavage preferences, and fragmentomics analysis.',
