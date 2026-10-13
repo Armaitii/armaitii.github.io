@@ -7,7 +7,7 @@ export const PROFILE = {
   education: "Master's degree Department of Biotechnology · University of Tehran",
 
   about: [
-"I'm particularly interested in chromatin architecture, epigenetics, and the molecular mechanisms underlying neurodevelopmental and psychiatric disorders. For my next research step, I want to connect these mechanistic questions with experimental biological systems and explore how a deeper understanding of regulation could inform therapeutic strategies.",
+"I'm particularly interested in chromatin architecture, epigenetics, genome engineering, and understanding mechanisms underlying neurodevelopmental and psychiatric disorders. For my next research step, I want to connect these mechanistic questions with experimental biological systems and explore how a deeper understanding of regulation could inform therapeutic strategies.",
   ],
 
   location: 'University Tehran, IR',
