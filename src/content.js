@@ -80,6 +80,52 @@ export const PROJECTS = [
     featured: false,
   },  
   {
+    title: 'Non-alcoholic Fatty Liver disease prediction',
+    desc:
+      'Machine learning project for disease prediction using transcriptomics data comparing multiple methods (SVM, Random Forest, Logistic regression, Neural Network).',
+
+    tags: [
+      'RNA-seq',
+      'feature selection',
+      'Machine learning',
+      'Genetic Algorithm'
+    ],
+    lang: 'Python',
+    langColor: '#37eeff',
+    link: '',
+    featured: false,
+  },  
+  {
+    title: 'NGS analysis on Glioblastoma tumor and normal tissue',
+    desc:
+      'Project for finding patient specific cancer-causing mutations and designing a personalized liquid-biopsy panel for monitoring',
+
+    tags: [
+      'Galaxy',
+      'variant calling',
+      'Whole Exome Sequencing',
+    ],
+    lang: '',
+    langColor: '',
+    link: '',
+    featured: false,
+  },  
+  {
+    title: 'Protein engineering on Asparaginase',
+    desc:
+      'Exploring rational protein engineering techniques for the objective of enhancing the thermostability of Asparaginase.',
+
+    tags: [
+      'PyMOL',
+      'DynaMUT',
+      'Hotspot Wizard',
+    ],
+    lang: '',
+    langColor: '',
+    link: '',
+    featured: false,
+  },  
+  {
     title: 'Portfolio',
     desc: 'The exact visual that runs behind this page. A ball does gradient descent while your cursor deforms the surface.',
     tags: ['three.js', 'WebGL'],
